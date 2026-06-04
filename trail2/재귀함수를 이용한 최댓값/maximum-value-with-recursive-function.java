@@ -4,21 +4,19 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        int n = sc.nextInt() - 1;
+        int n = sc.nextInt();
 
-        int num = sc.nextInt();
-
-        int max = isMax(n, num, sc);
+        int max = findMax(n, sc);
 
         System.out.printf("%d", max);
     }
 
-    private static int isMax(int n, int num, Scanner sc) {
-        if (n == 0) return num;
+    private static int findMax(int n, Scanner sc) {
+        if (n == 1) return sc.nextInt();
 
-        int tmp = sc.nextInt();
+        int current = sc.nextInt();
+        int max = findMax(n - 1, sc);
 
-        if (num < tmp) return isMax(n - 1, tmp, sc);
-        else return isMax(n - 1, num, sc);
+        return Math.max(current, max);
     }
 }

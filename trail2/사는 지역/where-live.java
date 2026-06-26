@@ -26,8 +26,10 @@ public class Main {
         People[] p = new People[N];
 
         for (int i = 0; i < N; i++) {
-            String[] arr = sc.nextLine().split(" ");
+            String[] arr = sc.nextLine().split(" "); // 띄어쓰기로 구분되어있으면 sc.next()로 끊는게 좋다!
+            // 지금의 방식은 여러번 띄어쓰기가 되어있으면 못잡는다!
             p[i] = new People(arr[0], arr[1], arr[2]);
+            // p[i] = new People(sc.next(), sc.next(), sc.next());
         }
         
         int idx = 0;

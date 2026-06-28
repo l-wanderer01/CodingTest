@@ -1,43 +1,50 @@
 name: Move LeetCode Solutions
 
 on:
-  workflow_dispatch:  # 수동 실행 옵션 유지
+  workflow_dispatch:
+  schedule:
+    # Daily sweep at 03:10 KST.
+    - cron: '10 18 * * *'
   push:
     paths:
-      - '[0-9][0-9][0-9][0-9]-*/**'  # LeetHub가 생성하는 폴더 패턴 (예: 0020-valid-parentheses)
+      - '[0-9][0-9][0-9][0-9]-*/**'
+
+permissions:
+  contents: write
 
 jobs:
   move-files:
     runs-on: ubuntu-latest
+    if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # 최근 커밋 기록을 가져오기 위해 설정
+          fetch-depth: 2
 
       - name: Move LeetCode solutions
+        shell: bash
         run: |
-          # 디버깅을 위한 현재 디렉토리 내용 출력
-          echo "Current directory contents:"
-          ls -la
-          
-          # LeetCode 폴더가 없다면 생성
+          shopt -s nullglob
           mkdir -p LeetCode
-          
-          # 변경된 파일 목록 확인
+
           echo "Changed files in this push:"
-          git diff --name-only HEAD^ HEAD
-          
-          # LeetHub가 생성한 폴더들을 LeetCode 폴더로 이동
+          git diff --name-only HEAD^ HEAD || true
+
           found=0
           for d in [0-9][0-9][0-9][0-9]-*; do
             if [ -d "$d" ]; then
               echo "Moving directory: $d"
-              mv "$d" "LeetCode/" && found=1
+              if [ -e "LeetCode/$d" ]; then
+                rsync -a "$d"/ "LeetCode/$d"/
+                rm -rf "$d"
+              else
+                mv "$d" LeetCode/
+              fi
+              found=1
             fi
           done
-          
-          # 이동할 폴더를 찾지 못했을 경우에도 오류로 처리하지 않음
+
           if [ $found -eq 0 ]; then
             echo "No matching directories found to move"
           fi

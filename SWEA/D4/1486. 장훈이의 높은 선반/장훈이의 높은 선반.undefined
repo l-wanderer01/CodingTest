@@ -1,0 +1,78 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Solution {
+    // 점원 수
+    static int N;
+    // 목표 높이(B)
+    static int height;
+    // 점원 키 리스트
+    static int[] arr;
+    // 정답 높이
+    static int answer;
+
+    public static void main(String args[]) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        // 케이스마다 공백으로 구분된 숫자들을 읽을 땐 StringTokenizer!
+        // StringTokenizer : readLine()으로 읽어온 한 줄의 문자열을 공백(" ")이나 지정한 구분자를 기준으로 쪼개주는 역할
+        StringTokenizer st;
+        // StringBuilder : 최종 답 저장
+        StringBuilder sb = new StringBuilder();
+
+        // 총 TC 개수
+        String line = br.readLine(); // 한 줄을 통째로 읽어 String으로 변환
+        int T = Integer.parseInt(line);
+
+        for (int testcase = 1; testcase <= T; testcase++) {
+            String info = br.readLine();
+            st = new StringTokenizer(info); // 공백을 기준으로 문자열 쪼갬
+
+            // 전체 점원 수
+            N = Integer.parseInt(st.nextToken());
+            // 목표 높이
+            height = Integer.parseInt(st.nextToken());
+            // 점원 정보 저장
+            arr = new int[N];
+            // 정답 변수 초기화
+            answer = Integer.MAX_VALUE;
+
+            String tmp = br.readLine();
+            st = new StringTokenizer(tmp);
+
+            for (int i = 0; i < N; i++) {
+                arr[i] = Integer.parseInt(st.nextToken());
+            }
+
+            dfs(0, 0);
+
+            // 출력문
+            sb.append("#").append(testcase).append(" ").append(answer - height).append("\n");
+        }
+
+        System.out.printf("%s", sb.toString());
+    }
+
+    public static void dfs(int idx, int currentHeight) {
+        // 1. 가지치기 : 현재 탑의 높이가 기준 height보다 크다면 더 더할 필요가 없음
+        if (currentHeight >= answer) return;
+
+        // 2. 조건 만족하는지 확인 : 탑의 높이가 B 이상이라면 answer 갱신
+        if (currentHeight >= height) {
+            if (currentHeight == height) {
+                answer = currentHeight;
+                return;
+            }
+            answer = Math.min(answer, currentHeight);
+        }
+
+        // 3. 모든 점원 확인 했다면 종료
+        if (idx == N) return;
+
+        // 4. 재귀호출 (해당 점원을 포함하는 경우, 해당 점원을 포함하지 않는 경우)
+        dfs(idx + 1, currentHeight + arr[idx]); // 해당 점원을 포함하는 경우
+        dfs(idx + 1, currentHeight); // 해당 점원을 포함하지 않는 경우
+    }
+}

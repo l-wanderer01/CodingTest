@@ -1,26 +1,34 @@
+import java.util.*;
+
 class Solution {
-    int answer = 0;
-    
-    public void bfs(int leaf, int index, int[] numbers, int target) { // 현재 leaf의 값, 현재 탐색중인 노드의 index
-        if (index == numbers.length) {
-            if (leaf == target){
-                answer++;   
-            }
-            return;
-        }
-        
-        bfs(leaf - numbers[index], index + 1, numbers, target);
-        bfs(leaf + numbers[index], index + 1, numbers, target);
-        
-    }
+    static int tg;
+    static int answer = 0;
     
     public int solution(int[] numbers, int target) {
-        int cnt = numbers.length; // 재귀 반복 횟수
+        tg = target;
+        // 자료구조 = numbers로 주는 리스트 활용
+        // 알고리즘 = DFS
         
-        // 탐색 call
-        bfs(-1 * numbers[0], 1, numbers, target); // - 만 반복하여 결과 도출
-        bfs(numbers[0], 1, numbers, target); // + 만 반복하여 결과 도출
+        dfs(numbers, 0, numbers[0], 0);
+        dfs(numbers, 0, -1 * numbers[0], 0);
         
         return answer;
+    }
+    
+    public void dfs(int[] numbers, int idx, int num, int sum) {
+        // 종료조건
+        if (idx == numbers.length - 1) {
+            sum += num;
+            if (sum == tg) {
+                answer++;
+                System.out.println(answer);
+            }
+            return;   
+        }
+        // 방문 노드 stack에 추가
+        sum += num;
+        dfs(numbers, idx+1, -1 * numbers[idx+1], sum);
+        dfs(numbers, idx+1, 1 * numbers[idx+1], sum);
+        
     }
 }

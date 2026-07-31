@@ -2,20 +2,22 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] array, int[][] commands) {
-        int[] answer = new int[commands.length];
+        // commands의 길이
+        int len = commands.length;
         
-        for (int cnt = 0; cnt < commands.length; cnt++) {
-            int i = commands[cnt][0], j = commands[cnt][1], k = commands[cnt][2];
-            if (j - i == 0) { // 요소가 1개라면 해당 요소를 answer에 넣고 반복
-                answer[cnt] = array[i - 1];
-                continue;
-            }
-            int[] tmp = new int[j - i + 1]; // 자른 배열
-            for (int num = 0; num < j - i + 1; num++) {
-                tmp[num] = array[num + i - 1];
-            }
+        int[] answer = new int[len];
+        
+        for (int cnt = 0; cnt < len; cnt++) {
+            // 배열 시작
+            int start = commands[cnt][0]-1;
+            // 배열 끝
+            int end = commands[cnt][1];
+            // 찾을 인덱스
+            int idx = commands[cnt][2]-1;
+
+            int[] tmp = Arrays.copyOfRange(array, start, end);
             Arrays.sort(tmp);
-            answer[cnt] = tmp[k - 1];
+            answer[cnt] = tmp[idx];
         }
         
         return answer;

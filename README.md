@@ -11,3 +11,15 @@
 - `SWEA/`: SWEA(SW Expert Academy) 풀이 저장 위치
 
 GitHub Actions가 루트에 새로 생성된 풀이 폴더를 각 서비스별 디렉토리로 정리합니다.
+
+<!---LeetCode Topics Start-->
+# LeetCode Topics
+## Array
+|  |
+| ------- |
+| [0643-maximum-average-subarray-i](https://github.com/l-wanderer01/CodingTest/tree/master/0643-maximum-average-subarray-i) |
+## Sliding Window
+|  |
+| ------- |
+| [0643-maximum-average-subarray-i](https://github.com/l-wanderer01/CodingTest/tree/master/0643-maximum-average-subarray-i) |
+<!---LeetCode Topics End-->

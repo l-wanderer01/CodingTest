@@ -4,10 +4,9 @@ class Solution {
     public int solution(int[][] triangle) {
         int answer = 0;
         this.triangle = triangle;
-        // 1. 위에서 아래로 내려간다 1번 인덱스부터 n번 인덱스까지
-        int start = triangle[0][0];
         int len = triangle.length;
         
+        // 1. 위에서 아래로 내려간다 1번 인덱스부터 n번 인덱스까지
         for (int i = 1; i < len; i++) {
             // 2. 0번 인덱스부터 i 인덱스까지 돌면서 값 업데이트
             for (int j = 0; j <= i; j++) {
@@ -43,13 +42,3 @@ class Solution {
         return res;
     }
 }
-
-// 알고리즘 : DP (메모이제이션)
-
-// 위에서 아래로 내려간다 1번 인덱스부터 n번 인덱스까지
-        
-// 0번 인덱스부터 i 인덱스까지 돌면서 값 업데이트
-
-// 가장 좌측이랑 우측이라면 각각 한번의 연산만 함
-
-// 모든 값을 업데이트한 뒤, 제일 바닥에서 값이 제일 큰걸 answer에 둔다

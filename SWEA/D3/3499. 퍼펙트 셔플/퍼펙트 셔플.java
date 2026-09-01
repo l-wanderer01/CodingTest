@@ -23,19 +23,31 @@ public class Solution {
 			}
 			
 			sb.append("#").append(testCase).append(" ");
-
-			// 투 포인터
-			int left = 0;
-			int right = (N+1)/2;
 			
-			for (int i = 0; i < N; i++) {
-				if (i % 2 == 1) {
-					sb.append(cards[right++]).append(" ");
-				}
-				else {
-					sb.append(cards[left++]).append(" ");
+			// 풀이 1
+//			// 투 포인터
+//			int left = 0;
+//			int right = (N+1)/2;
+//			
+//			for (int i = 0; i < N; i++) {
+//				if (i % 2 == 1) {
+//					sb.append(cards[right++]).append(" ");
+//				}
+//				else {
+//					sb.append(cards[left++]).append(" ");
+//				}
+//			}
+			
+			// 풀이 2
+			// 절반만 순회
+			int half = (N+1)/2;
+			for (int i = 0; i < half; i++) {
+				sb.append(cards[i]).append(" ");
+				if (i+half < N) {
+					sb.append(cards[i+half]).append(" ");
 				}
 			}
+			
 			sb.append("\n");
 		}
 		

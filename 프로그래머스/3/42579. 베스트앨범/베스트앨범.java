@@ -22,9 +22,8 @@ class Solution {
             String genre = genres[i]; // 현재 인덱스의 장르
             musics[i] = new Music(genre, plays[i], i);
             map.put(genre, map.get(genre)+plays[i]);
+            // map.put(genre, map.getOrDefault(genre, 0)+plays[i]); // Set을 쓰지 않고 해결 가능
         }
-        
-        // 
         
         // 3가지 정렬 기준에 맞춰서 정렬 (Comparable)
         Arrays.sort(musics, new Comparator<Music>() {
@@ -43,16 +42,21 @@ class Solution {
         List<Integer> answer = new ArrayList<>();
         
         String genre = "";
+        // 정렬된 배열을 끝까지 돔
         for (int i = 0, cnt = 0; i < musics.length; i++) {
+            // 이전 곡과 같은 장르인 경우
             if (genre.equals(musics[i].genre)) {
+                // 이미 2곡을 선택했다면 다음으로 이동
                 if (cnt == 2) {
                     continue;
                 }
+                // 2곡 선택되지 않았다면 해당 앨범의 인덱스 추가
                 else {
                     cnt++;
                     answer.add(musics[i].idx);
                 }
             }
+            // 새로운 장르인 경우
             else {
                 cnt = 1;
                 genre = musics[i].genre;
@@ -80,6 +84,6 @@ class Solution {
 }
 
 // 알고리즘 
-// 자료구조 : Class와 Array 사용하면 풀리나
+// 자료구조 : Class와 Array 사용하면 풀릴 것 같다.
 // 조건 
 // Class를 먼저 정렬한다. 그 후 노래별 재생횟수로 정렬한다.

@@ -5,24 +5,13 @@ class Solution {
         // 총 음악 개수
         int len = genres.length;
         Music[] musics = new Music[len];
-        // 장르별 노래 개수 저장
-        Set<String> set = new HashSet<>();
+        // 장르별 노래 플레이 횟수 저장
         Map<String, Integer> map = new HashMap<>();
-        
-        // 장르 종류 저장
-        for (int i = 0; i < len; i++) {
-            set.add(genres[i]);
-        }
-        // 장르 개수 저장
-        for (String genre : set) {
-            map.put(genre, 0);
-        }
         
         for (int i = 0; i < len; i++) {
             String genre = genres[i]; // 현재 인덱스의 장르
             musics[i] = new Music(genre, plays[i], i);
-            map.put(genre, map.get(genre)+plays[i]);
-            // map.put(genre, map.getOrDefault(genre, 0)+plays[i]); // Set을 쓰지 않고 해결 가능
+            map.put(genre, map.getOrDefault(genre, 0)+plays[i]); // Set을 쓰지 않고 해결 가능
         }
         
         // 3가지 정렬 기준에 맞춰서 정렬 (Comparable)
@@ -82,8 +71,3 @@ class Solution {
         }
     }
 }
-
-// 알고리즘 
-// 자료구조 : Class와 Array 사용하면 풀릴 것 같다.
-// 조건 
-// Class를 먼저 정렬한다. 그 후 노래별 재생횟수로 정렬한다.

@@ -29,17 +29,7 @@ public class Solution {
             }
 
             // 무리 개수 출력
-            // boolean[] group = new boolean[N+1];
-            // int groupCnt = 0;
-            // for (int i = 1; i <= N; i++) {
-            //     int iParent = findSet(i);
-            //     if (!group[iParent]) {
-            //         group[iParent] = true;
-            //         groupCnt++;
-            //     }
-            // }
-
-            // 무리 개수는 본인이 대표자인 애들만 세면 된다!
+            // 무리 개수는 본인이 대표자인 애들만 세면 된다! (중요!)
             int groupCnt = 0;
             for (int i = 1; i <= N; i++) {
                 if (parent[i] == i) groupCnt++;
@@ -50,22 +40,25 @@ public class Solution {
         System.out.print(sb.toString());
     }
 
-    // find-set
+    // // find-set (경로 압축 x)
+    // static int findSet(int v) { // int를 리턴!
+    //     if (v == parent[v]) return v;
+    //     return findSet(parent[v]);
+    // }
+
+    // find-set (경로 압축 o)
     static int findSet(int v) {
-        if (v == parent[v]) return v;
-        return findSet(parent[v]);
+        if (parent[v] == v) return v;
+        return parent[v] = findSet(parent[v]); // 경로 압축!
     }
 
     static void union(int x, int y) {
         int parentX = findSet(x);
         int parentY = findSet(y);
-        if (parentX == parentY) return;
-        // 작은 부모의 값을 큰 부모의 값으로 옮긴다! (x와 y를 옮기는게 아니라!)
-        if (parentX < parentY) {
+        // if (parentX == parentY) return;
+        // (중요) 작은 부모의 값을 큰 부모의 값으로 옮긴다! (x와 y를 옮기는게 아니라!)
+        if (parentX != parentY) { // 굳이 parentX와 parentY의 대소비교를 하지 않아도 된다! (문제에서 다른 조건이 주어진다면 여기서 집합의 부모를 대소비교 로직 추가하면 된다!)
             parent[parentY] = parentX;
-        }
-        else {
-            parent[parentX] = parentY;
         }
     }       
 }

@@ -1,81 +1,71 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Solution {
-    static boolean[] visited;
-    static List<List<Integer>> peoples;
-    static int N;
-
+    static int[] parent;
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
+
         int T = Integer.parseInt(br.readLine());
 
         for (int tc = 1; tc <= T; tc++) {
             StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-            N = Integer.parseInt(st.nextToken()); // 정점 개수
-            int M = Integer.parseInt(st.nextToken()); // 엣지 개수
-            int group = 0; // 그룹 수 카운트
-            peoples = new ArrayList<>(); // 사람들 연결된 그래프
-            
-            for (int i = 0; i <= N; i++) {
-                peoples.add(new ArrayList<>()); // 0~N번까지 노드까지 초기화
-            }
-            for (int i = 0; i < M; i++) {
-                st = new StringTokenizer(br.readLine(), " ");
-                int s = Integer.parseInt(st.nextToken());
-                int e = Integer.parseInt(st.nextToken());
+            int N = Integer.parseInt(st.nextToken()); // 노드 수
+            int M = Integer.parseInt(st.nextToken()); // 간선의 수
 
-                // 양방향 처리
-                peoples.get(s).add(e);
-                peoples.get(e).add(s);
-            }
-            
-            // 인접리스트 확인
-            // printAdjList();
+            parent = new int[N+1];
 
-            visited = new boolean[N+1]; // 인맥 방문 처리
-
+            // make-set
             for (int i = 1; i <= N; i++) {
-                if (!visited[i]) {
-                    bfs(i);
-                    group++;
-                }
+                parent[i] = i;
             }
-            
-            sb.append("#").append(tc).append(" ").append(group).append("\n");
+
+            for (int m = 0; m < M; m++) {
+                st = new StringTokenizer(br.readLine(), " ");
+                int x = Integer.parseInt(st.nextToken());
+                int y = Integer.parseInt(st.nextToken());
+                union(x, y);
+            }
+
+            // 무리 개수 출력
+            // boolean[] group = new boolean[N+1];
+            // int groupCnt = 0;
+            // for (int i = 1; i <= N; i++) {
+            //     int iParent = findSet(i);
+            //     if (!group[iParent]) {
+            //         group[iParent] = true;
+            //         groupCnt++;
+            //     }
+            // }
+
+            // 무리 개수는 본인이 대표자인 애들만 세면 된다!
+            int groupCnt = 0;
+            for (int i = 1; i <= N; i++) {
+                if (parent[i] == i) groupCnt++;
+            }
+
+            sb.append("#").append(tc).append(" ").append(groupCnt).append("\n");
         }
-        System.out.println(sb.toString());
+        System.out.print(sb.toString());
     }
 
-    static void bfs(int people) {
-        visited[people] = true;
-        Queue<Integer> q = new ArrayDeque<>();
-        q.offer(people);
-        
-        while(!q.isEmpty()) {
-            int me = q.poll();
-            for (int i = 0; i < peoples.get(me).size(); i++) {
-                // 나와 연결되어있는 친구를 큐에 넣는다.
-                int friend = peoples.get(me).get(i);
-                if (!visited[friend]) {
-                    q.offer(friend);
-                    visited[friend]= true;
-                }
-            }
-        }
+    // find-set
+    static int findSet(int v) {
+        if (v == parent[v]) return v;
+        return findSet(parent[v]);
     }
 
-    // static void printAdjList() {
-    //     System.out.println();
-    //     for (int i = 0; i <= N; i++) {
-    //         System.out.print(i + " : ");
-    //         if (peoples.get(i).isEmpty()) {System.out.println(); continue;}
-    //         for (int j = 0; j < peoples.get(i).size(); j++) {
-    //             System.out.print(peoples.get(i).get(j) + ", ");
-    //         }
-    //         System.out.println();
-    //     }
-    // }
+    static void union(int x, int y) {
+        int parentX = findSet(x);
+        int parentY = findSet(y);
+        if (parentX == parentY) return;
+        // 작은 부모의 값을 큰 부모의 값으로 옮긴다! (x와 y를 옮기는게 아니라!)
+        if (parentX < parentY) {
+            parent[parentY] = parentX;
+        }
+        else {
+            parent[parentX] = parentY;
+        }
+    }       
 }

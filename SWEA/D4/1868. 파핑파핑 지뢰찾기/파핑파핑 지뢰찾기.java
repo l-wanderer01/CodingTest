@@ -9,7 +9,7 @@ class Solution
 	static int[] dc = {-1, 0, 1, -1, 1, -1, 0, 1};
 	static boolean[][] visited;
 	static int N;
-	static int res; // 0개 몇개 터트렸는지 카운트
+	static int clickCount; // 0개 몇개 터트렸는지 카운트
 	
 	public static void main(String args[]) throws Exception
 	{
@@ -32,101 +32,92 @@ class Solution
 			}
 			
 			// step2 : 배열에 각 위치별 주변 폭탄 개수 초기화
-			//1,1 ~ N,N까지
-			//이때, 해당 위치가 -1이라면 continue;
-			//아니라면, 8방 탐색하면서 주변 -1 개수 카운트쳐서 해당 정점에 저장 (for int i = 0; i < 8; i++) lands[r+dr[i]][c+dc[i]]
-			
-			int startX = -1; // 최초의 0인 애를 뽑는다.
-			int startY = -1;
-			
-			for (int r = 1; r <= N; r++) {
-				for (int c = 1; c <= N; c++) {
-					//이때, 해당 위치가 -1이라면 continue;
-					if (lands[r][c] == -1) continue;
-					//아니라면, 8방 탐색하면서 주변 -1 개수 카운트쳐서 해당 정점에 저장
-					if (startX == -1 && startY == -1) {
-						startX = r;
-						startY = c;
-					}
-					for (int i = 0; i < 8; i++) {
-						if (lands[r+dr[i]][c+dc[i]] == -1) lands[r][c]++;
-					} // 8방 탐색
-				} // 열 탐색
-			} // 행 탐색
+			countAdjMines();
 			
 			// step3 : 1,1부터 0인 애들을 기준으로 bfs
-			//1,1부터 BFS
-			//0인 애들 파고들면서 0인 애랑 주변 애들 visited 처리하고 카운트 1 올림
-			//nr, nc가 1 이상이고 N이하인지 확인하면서 진행
 			visited = new boolean[N+2][N+2];
-			res = 0;
-			bfs();
+			clickCount = 0;
+
+            for (int r = 1; r <= N; r++) {
+                for (int c = 1; c <= N; c++) {
+                    //1,1부터 BFS 체크
+                    if (lands[r][c] == 0 && !visited[r][c]) {
+                        clickCount++; // 클릭하고 BFS
+                        bfs(r, c);
+                    }
+                }
+            }
 			
-            // System.out.println(res);
+			
+            // System.out.println(clickCount);
 			// (놓친 점) step4. 0인애들 다 처리하고, 이제 방문하지 않은 지뢰가 아닌애들 방문처리하면서 카운트 1 올림
 			for (int r = 1; r <= N; r++) {
 				for (int c = 1; c <= N; c++) {
+                    // 0인 애를 찾는다.
 					if (lands[r][c] > 0 && !visited[r][c]) {
-                        res++;
+                        clickCount++;
                     }
 				} // 열 탐색
 			} // 행 탐색
 			
-			sb.append("#").append(tc).append(" ").append(res).append("\n");
+			sb.append("#").append(tc).append(" ").append(clickCount).append("\n");
 		}
 		System.out.println(sb.toString());
 	}
 	
-	static void bfs() {
+    static void countAdjMines() {
+        //1,1 ~ N,N까지
+        for (int r = 1; r <= N; r++) {
+            for (int c = 1; c <= N; c++) {
+                //이때, 해당 위치가 -1이라면 continue;
+                if (lands[r][c] == -1) continue;
+                //아니라면, 8방 탐색하면서 주변 -1(지뢰) 개수 카운트쳐서 해당 정점에 저장
+                for (int i = 0; i < 8; i++) {
+                    if (lands[r+dr[i]][c+dc[i]] == -1) lands[r][c]++;
+                } // 8방 탐색
+            } // 열 탐색
+        } // 행 탐색
+    }
+
+    // 0인 애들 파고들면서 0인 애랑 주변 애들 visited 처리
+	static void bfs(int r, int c) {
 		Queue<Node> q = new ArrayDeque<>();
-		
-        // 제일 처음 0인 애를 찾는다.
-		for (int r = 1; r <= N; r++) {
-			for (int c = 1; c <= N; c++) {
-                // 0이 아닌 애들 + 이미 방문한 0인 애들 걸러야한다.
-                if (lands[r][c] != 0 || visited[r][c]) continue;
+		// 첫 입력은 바로 큐에
+        q.offer(new Node(r, c));
+        // 방문 처리
+        visited[r][c] = true;
 
-                // 0이면서 첫 방문인 노드
-                q.offer(new Node(r, c));
-                res++;
-                // System.out.println(res);
+        while(!q.isEmpty()) {
+            Node current = q.poll();
 
-                while(!q.isEmpty()) {
-			
-                    Node n = q.poll();
-                    int nRow = n.x;
-                    int nCol = n.y;
-
-                    //이때, 폭탄이거나 이미 방문한 애라면 skip
-                    if (lands[nRow][nCol] != 0 && visited[nRow][nCol]) continue;
-
-                    visited[nRow][nCol] = true;
-                    //아니라면, 8방 탐색하면서 -1이 아닌 애들 visited 처리하고 큐에 집어넣고 카운트 1 증가
-                    for (int i = 0; i < 8; i++) {
-                        int nr = nRow+dr[i];
-                        int nc = nCol+dc[i];
-                        // 배열 안의 요소이면서, 지뢰가 아니고, 아직 방문 안한 애들인지 확인
-                        if (nr >= 1 && nr <= N && nc >= 1 && nc <= N && lands[nr][nc] != -1 && !visited[nr][nc]) {
-                            visited[nr][nc] = true;
-                            // System.out.println(nr + ", " + nc);
-                            if (lands[nr][nc] == 0) {
-                                q.offer(new Node(nr, nc));
-                            }
-                        }
-
-                    } // 8방 탐색
+            //아니라면, 8방 탐색하면서 -1이 아닌 애들 visited 처리하고 큐에 집어넣고 카운트 1 증가
+            for (int i = 0; i < 8; i++) {
+                int nr = current.row+dr[i];
+                int nc = current.col+dc[i];
+                // 배열 안의 요소이면서, 지뢰가 아니고, 아직 방문 안한 애들인지 확인
+                if (isInRange(nr, nc) && !visited[nr][nc]) {
+                    visited[nr][nc] = true;
+                    // System.out.println(nr + ", " + nc);
+                    if (lands[nr][nc] == 0) {
+                        q.offer(new Node(nr, nc));
+                    }
                 }
-			}
-		}
+            } // 8방 탐색
+        }
 	}
 	
-	static class Node {
-		int x,y;
+    // 범위 안인지 체크 (r, c가 1 이상이고 N이하인지 확인)
+    static boolean isInRange(int r, int c) {
+        return r >= 1 && r <= N && c >= 1 && c <= N;
+    }
 
-		public Node(int x, int y) {
+	static class Node {
+		int row,col;
+
+		public Node(int row, int col) {
 			super();
-			this.x = x;
-			this.y = y;
+			this.row = row;
+			this.col = col;
 		}
 	}
 }

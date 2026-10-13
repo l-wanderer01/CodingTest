@@ -46,17 +46,19 @@ public class Solution {
 	            int[] vertex = pq.poll();
 	            int x = vertex[0];
 	            int y = vertex[1];
+	            int weight = vertex[2];
+	            if (weight > dist[x][y]) continue; // 해당 위치의 값이 최소인지 먼저 확인
 	            
 	            for (int d = 0; d < 4; d++) {
 	                int nr = x + dr[d];
 	                int nc = y + dc[d];
 	                
-	                if (!isinRange(nr, nc)) continue;
+	                if (!isinRange(nr, nc)) continue; // 범위 내인지 확인
 	                
 	                // 누적 값 업데이트
 	                if (dist[nr][nc] > dist[x][y] + map[nr][nc]) {
 	                    dist[nr][nc] = dist[x][y] + map[nr][nc];
-	                    pq.offer(new int[]{nr, nc, map[nr][nc]});
+	                    pq.offer(new int[]{nr, nc, dist[nr][nc]}); // pq에 저장되는 값들은 다음 위치와 다음 위치의 최소 거리!
 	                }
 	            }
 	        }

@@ -18,32 +18,34 @@ public class Main {
         int res = 0; // 2번 이상 지나간 영역의 개수
         for (int idx = 0; idx < 2001; idx++) {
             if (line[idx] > 1) {
-                // System.out.println(idx + ": " + line[idx]);
                 res++;
             }
-            // if (cnt > 1) res++;
-
         }
 
         System.out.println(res);
     }
 
     static void move(int num, char dir) {
-        if (dir == 'L') {
-            for (int i = idx-1; i >= idx-num; i--) {
-                line[i]++;
-            }
-            // System.out.println("dir == 'L' : " + (idx-num));
-            idx -= num;
-            // System.out.println(idx);
-        }
-        if (dir == 'R') {
-            for (int i = idx; i < idx+num; i++) {
-                line[i]++;
-            }
-            idx += num;
-            // System.out.println(idx);
-        }
+        int start = idx;
+        int end = idx;
 
+        // L일 때, 시작정점을 왼쪽으로 이동, R일 때, 끝 정점을 오른쪽으로 이동
+        if (dir == 'L') {
+            start = idx - num;
+        }
+        else {
+            end = idx + num;
+        }
+        // 이동 칸 개수 누적합
+        for (int i = start; i < end; i++) {
+            line[i]++;
+        }
+        // L이면 idx를 num만큼 왼쪽으로 이동, R이면 idx를 num 만큼 오른쪽으로 이동
+        if (dir == 'L') {
+            idx -= num;
+        }
+        else {
+            idx += num;
+        }
     }
 }

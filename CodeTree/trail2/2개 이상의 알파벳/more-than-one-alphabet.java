@@ -8,17 +8,11 @@ public class Main {
 
     static String isTwo(String str) {
         char[] cArr = str.toCharArray();
-        boolean[] check = new boolean['z' - 'a'+1];
-        for (int i = 0; i < cArr.length; i++) {
-            int current = cArr[i]-'a';
-            if (!check[current]) check[current] = true;
-        }
-
         int cnt = 0;
-        for (int i = 0; i < check.length; i++) {
-            if (check[i]) cnt++;
+        for (int i = 0; i < cArr.length-1; i++) {
+            if (cArr[i] != cArr[i+1]) cnt++;
         }
 
-        return cnt >= 2 ? "Yes" : "No";
+        return cnt >= 1 ? "Yes" : "No";
     }
 }

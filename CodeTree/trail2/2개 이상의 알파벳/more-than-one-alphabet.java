@@ -8,11 +8,14 @@ public class Main {
 
     static String isTwo(String str) {
         char[] cArr = str.toCharArray();
-        int cnt = 0;
+        boolean check = false;
         for (int i = 0; i < cArr.length-1; i++) {
-            if (cArr[i] != cArr[i+1]) cnt++;
+            if (cArr[i] != cArr[i+1]) { // 2이상인지만 비교하면 되니까 모두 다같은 문자인지만 확인하면 된다.
+                check = true; // 앞 뒤의 문자가 2개 이상 사용된거니까 2개 이상 사용되었음을 표시
+                break;
+            }
         }
 
-        return cnt >= 1 ? "Yes" : "No";
+        return check ? "Yes" : "No";
     }
 }

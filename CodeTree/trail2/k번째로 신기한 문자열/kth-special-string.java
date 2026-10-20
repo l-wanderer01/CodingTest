@@ -15,26 +15,26 @@ public class Main {
         Arrays.sort(words);
         // System.out.println(Arrays.toString(words));
         
-        int tWordIdx = 0;
+        int tWordIdx = -1; // 없을수도 있기에 안전하게 인덱스에 포함되지 않는 값으로 초기화
 
         for (int idx = 0; idx < words.length; idx++) {
             String s = words[idx];
             boolean flag = false;
             int checkIdx = t.length()/2;
             if (s.length() < tLength) continue; // 비교 대상의 길이가 더 길다면 예외처리
-            String temp = s.substring(0, tLength);
-            if (temp.equals(t)) {
-                tWordIdx = idx;
-                break;
-            }
-            // for (int i = 0; i < checkIdx; i++) {
-            //     if (s.charAt(i) != t.charAt(i) || t.charAt(tLength-1-i) != s.charAt(tLength-1-i)) continue;
+            // String temp = s.substring(0, tLength);
+            // if (temp.equals(t)) {
             //     tWordIdx = idx;
-            //     flag = true;
-            //     // System.out.println("flag = true : " + words[tWordIdx]);
             //     break;
             // }
-            // if (flag) break;
+            for (int i = 0; i <= checkIdx; i++) {
+                if (s.charAt(i) != t.charAt(i) || t.charAt(tLength-1-i) != s.charAt(tLength-1-i)) break;
+                tWordIdx = idx;
+                flag = true;
+                // System.out.println("flag = true : " + words[tWordIdx]);
+                // break;
+            }
+            if (flag) break;
         }
         System.out.print(words[tWordIdx+k-1]);
     }

@@ -1,11 +1,6 @@
-// import java.util.Scanner;
 import java.util.*;
 
 public class Main {
-    public static final int MAX_N = 1000;
-
-    public static int[] h = new int[MAX_N];
-    public static int[] w = new int[MAX_N];
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);

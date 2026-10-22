@@ -4,7 +4,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
-        // int[][] points = new int[n][2];
+
         Node[] nodes = new Node[n];
         for (int i = 0; i < n; i++) {
             int x = sc.nextInt();
@@ -13,28 +13,25 @@ public class Main {
             nodes[i] = new Node(i+1, dist);
         }
         
-        Arrays.sort(nodes);
+        Arrays.sort(nodes, (a, b) -> {
+            if (a.dist == b.dist) {
+                return Integer.compare(a.idx, b.idx);
+            }
+            return Integer.compare(a.dist, b.dist);
+        });
 
         for (int i = 0; i < n; i++) {
             System.out.println(nodes[i].idx);
         }
     }
 
-    static class Node implements Comparable<Node> {
+    static class Node {
         int dist;
         int idx;
         
         public Node (int idx, int dist) {
             this.idx = idx;
             this.dist = dist;
-        }
-
-        @Override
-        public int compareTo(Node o) {
-            if (this.dist == o.dist) {
-                return this.idx - o.idx;
-            }
-            return this.dist - o.dist;
         }
     }
 }
